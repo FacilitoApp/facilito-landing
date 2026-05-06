@@ -1,0 +1,5 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: #0D1117; }
+#root { width: 100%; max-width: 100%; text-align: left; border: none; }
+h1, h2, h3, h4 { font-weight: inherit; }
