@@ -141,6 +141,8 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [formState, setFormState] = useState({ name: '', email: '', company: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState('')
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const t = translations[lang]
 
@@ -155,9 +157,27 @@ export default function App() {
     setMenuOpen(false)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
+    setSubmitting(true)
+    setFormError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setSubmitted(true)
+      } else {
+        setFormError(data.error || 'Něco se pokazilo. Zkuste to prosím znovu.')
+      }
+    } catch {
+      setFormError('Nepodařilo se odeslat zprávu. Zkontrolujte připojení.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const styles = {
@@ -671,16 +691,6 @@ export default function App() {
               {t.hero.cta2}
             </button>
           </div>
-          <div style={styles.heroStats}>
-            {[['500+', lang === 'cs' ? 'spravovaných budov' : lang === 'en' ? 'managed buildings' : 'verwaltete Gebäude'],
-              ['50k+', lang === 'cs' ? 'vyřešených ticketů' : lang === 'en' ? 'resolved tickets' : 'gelöste Tickets'],
-              ['98%', lang === 'cs' ? 'spokojenost klientů' : lang === 'en' ? 'client satisfaction' : 'Kundenzufriedenheit']].map(([num, label]) => (
-              <div key={num} style={styles.stat}>
-                <span style={styles.statNum}>{num}</span>
-                <span style={styles.statLabel}>{label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -757,10 +767,18 @@ export default function App() {
                       onFocus={e => e.target.style.borderColor = BLUE}
                       onBlur={e => e.target.style.borderColor = BORDER} />
                   </div>
-                  <button type="submit" style={styles.submitBtn}
-                    onMouseEnter={e => e.target.style.background = BLUE_LIGHT}
+                  {formError && (
+                    <div style={{ color: '#F87171', fontSize: 13, marginBottom: 12 }}>
+                      {formError}
+                    </div>
+                  )}
+                  <button type="submit" style={{ ...styles.submitBtn, opacity: submitting ? 0.7 : 1 }}
+                    disabled={submitting}
+                    onMouseEnter={e => { if (!submitting) e.target.style.background = BLUE_LIGHT }}
                     onMouseLeave={e => e.target.style.background = BLUE}>
-                    {t.contact.send}
+                    {submitting
+                      ? (lang === 'cs' ? 'Odesílání…' : lang === 'en' ? 'Sending…' : 'Senden…')
+                      : t.contact.send}
                   </button>
                 </form>
               )}
