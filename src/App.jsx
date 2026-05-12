@@ -26,13 +26,7 @@ const translations = {
     },
     contact: {
       title: 'Kontaktujte nás',
-      sub: 'Rádi vám ukážeme, jak Facilito může zjednodušit vaši práci.',
-      name: 'Jméno a příjmení',
-      email: 'E-mailová adresa',
-      company: 'Společnost',
-      message: 'Vaše zpráva',
-      send: 'Odeslat zprávu',
-      success: 'Děkujeme! Ozveme se vám co nejdříve.',
+      note: 'Ozvěte se nám a rádi vám ukážeme demo.',
     },
     footer: {
       tagline: 'Profesionální facility management pro moderní organizace.',
@@ -64,13 +58,7 @@ const translations = {
     },
     contact: {
       title: 'Contact us',
-      sub: 'We are happy to show you how Facilito can simplify your work.',
-      name: 'Full name',
-      email: 'Email address',
-      company: 'Company',
-      message: 'Your message',
-      send: 'Send message',
-      success: 'Thank you! We will get back to you as soon as possible.',
+      note: 'Get in touch and we will be happy to show you a demo.',
     },
     footer: {
       tagline: 'Professional facility management for modern organizations.',
@@ -102,13 +90,7 @@ const translations = {
     },
     contact: {
       title: 'Kontakt',
-      sub: 'Wir zeigen Ihnen gerne, wie Facilito Ihre Arbeit vereinfachen kann.',
-      name: 'Vor- und Nachname',
-      email: 'E-Mail-Adresse',
-      company: 'Unternehmen',
-      message: 'Ihre Nachricht',
-      send: 'Nachricht senden',
-      success: 'Danke! Wir melden uns so bald wie möglich.',
+      note: 'Melden Sie sich bei uns und wir zeigen Ihnen gerne eine Demo.',
     },
     footer: {
       tagline: 'Professionelles Facility Management für moderne Organisationen.',
@@ -711,63 +693,19 @@ export default function App() {
         <div style={styles.container}>
           <span style={styles.sectionTag}>Kontakt</span>
           <h2 style={styles.sectionTitle}>{t.contact.title}</h2>
-          <p style={styles.sectionSub}>{t.contact.sub}</p>
-
-          <div style={styles.contactGrid}>
-            <div style={styles.contactInfo}>
-              <div style={styles.contactInfoItem}>
-                <div style={styles.contactInfoIcon}>📧</div>
-                <div>
-                  <div style={styles.contactInfoLabel}>Email</div>
-                  <div style={styles.contactInfoValue}>info@facilito.cz</div>
-                </div>
-              </div>
-            </div>
-
-            <div style={styles.form}>
-              {submitted ? (
-                <div style={styles.successMsg}>✓ {t.contact.success}</div>
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  <div style={styles.formRow}>
-                    <div style={styles.formGroup}>
-                      <label style={styles.label}>{t.contact.name}</label>
-                      <input style={styles.input} required value={formState.name}
-                        onChange={e => setFormState(s => ({ ...s, name: e.target.value }))}
-                        onFocus={e => e.target.style.borderColor = BLUE}
-                        onBlur={e => e.target.style.borderColor = BORDER} />
-                    </div>
-                    <div style={styles.formGroup}>
-                      <label style={styles.label}>{t.contact.email}</label>
-                      <input style={styles.input} type="email" required value={formState.email}
-                        onChange={e => setFormState(s => ({ ...s, email: e.target.value }))}
-                        onFocus={e => e.target.style.borderColor = BLUE}
-                        onBlur={e => e.target.style.borderColor = BORDER} />
-                    </div>
-                  </div>
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>{t.contact.company}</label>
-                    <input style={styles.input} value={formState.company}
-                      onChange={e => setFormState(s => ({ ...s, company: e.target.value }))}
-                      onFocus={e => e.target.style.borderColor = BLUE}
-                      onBlur={e => e.target.style.borderColor = BORDER} />
-                  </div>
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>{t.contact.message}</label>
-                    <textarea style={styles.textarea} required value={formState.message}
-                      onChange={e => setFormState(s => ({ ...s, message: e.target.value }))}
-                      onFocus={e => e.target.style.borderColor = BLUE}
-                      onBlur={e => e.target.style.borderColor = BORDER} />
-                  </div>
-                  <button type="submit" style={styles.submitBtn}
-                    onMouseEnter={e => e.target.style.background = BLUE_LIGHT}
-                    onMouseLeave={e => e.target.style.background = BLUE}>
-                    {t.contact.send}
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
+          <p style={{ ...styles.sectionSub, marginBottom: 32 }}>{t.contact.note}</p>
+          <a href="mailto:info@facilito.cz" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            color: '#60A5FA',
+            fontSize: 20,
+            fontWeight: 600,
+            textDecoration: 'none',
+            letterSpacing: -0.3,
+          }}>
+            📧 info@facilito.cz
+          </a>
         </div>
       </section>
 
