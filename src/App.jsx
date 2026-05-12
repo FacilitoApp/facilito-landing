@@ -141,8 +141,6 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [formState, setFormState] = useState({ name: '', email: '', company: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [formError, setFormError] = useState('')
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const t = translations[lang]
 
@@ -157,27 +155,21 @@ export default function App() {
     setMenuOpen(false)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    setSubmitting(true)
-    setFormError('')
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formState),
-      })
-      const data = await res.json()
-      if (res.ok) {
-        setSubmitted(true)
-      } else {
-        setFormError(data.error || 'Něco se pokazilo. Zkuste to prosím znovu.')
-      }
-    } catch {
-      setFormError('Nepodařilo se odeslat zprávu. Zkontrolujte připojení.')
-    } finally {
-      setSubmitting(false)
-    }
+    const { name, email, company, message } = formState
+    const subject = encodeURIComponent(`Zpráva z webu – ${name}`)
+    const body = encodeURIComponent(
+      [
+        `Jméno: ${name}`,
+        `Email: ${email}`,
+        company ? `Společnost: ${company}` : '',
+        '',
+        message,
+      ].filter(Boolean).join('\n')
+    )
+    window.location.href = `mailto:info@facilito.cz?subject=${subject}&body=${body}`
+    setSubmitted(true)
   }
 
   const styles = {
@@ -767,18 +759,10 @@ export default function App() {
                       onFocus={e => e.target.style.borderColor = BLUE}
                       onBlur={e => e.target.style.borderColor = BORDER} />
                   </div>
-                  {formError && (
-                    <div style={{ color: '#F87171', fontSize: 13, marginBottom: 12 }}>
-                      {formError}
-                    </div>
-                  )}
-                  <button type="submit" style={{ ...styles.submitBtn, opacity: submitting ? 0.7 : 1 }}
-                    disabled={submitting}
-                    onMouseEnter={e => { if (!submitting) e.target.style.background = BLUE_LIGHT }}
+                  <button type="submit" style={styles.submitBtn}
+                    onMouseEnter={e => e.target.style.background = BLUE_LIGHT}
                     onMouseLeave={e => e.target.style.background = BLUE}>
-                    {submitting
-                      ? (lang === 'cs' ? 'Odesílání…' : lang === 'en' ? 'Sending…' : 'Senden…')
-                      : t.contact.send}
+                    {t.contact.send}
                   </button>
                 </form>
               )}
